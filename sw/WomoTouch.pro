@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-01-08T11:40:31
+# Project created by QtCreator 2015-12-21T07:14:26
 #
 #-------------------------------------------------
 
@@ -9,15 +9,19 @@ QT += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = test
+TARGET = WomoTouch
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ../sw/rtcom.cpp
+    rtcom.cpp
 
 HEADERS  += mainwindow.h \
-    ../sw/rtcom.h
+    rtcom.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES +=
+
+
