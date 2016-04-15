@@ -237,19 +237,19 @@ void MainWindow::UpdateHomeValues (void)
     if(     (this->M_homeValues.tempIn < this->M_homeValues.tempInSoll)
        &&   (this->M_homeValues.heatingOn))
     {
-      //  this->SetKlima(false);
-      //  this->SetHeizung(true);
+        this->SetKlima(false);
+        this->SetHeizung(true);
     }
     else if (   (this->M_homeValues.tempIn > this->M_homeValues.tempInSoll)
               &&(this->M_homeValues.airconOn))
     {
-      //  this->SetHeizung(false);
-      //  this->SetKlima(true);
+        this->SetHeizung(false);
+        this->SetKlima(true);
     }
     else
     {
-      //  this->SetHeizung(false);
-      //  this->SetKlima(false);
+        this->SetHeizung(false);
+        this->SetKlima(false);
     }
     if(0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung))
     {
@@ -324,16 +324,6 @@ void MainWindow::UpdateActorValues (void)
     {
         M_rtCom->SetData(RTCom::E_RTCom_Actor_230_Cooker, 1);
     }
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_Music))
-    {
-        ui->ActorMusicLabelOff->setVisible(false);
-        ui->ActorMusicLabelOn->setVisible(true);
-    }
-    else
-    {
-        ui->ActorMusicLabelOff->setVisible(true);
-        ui->ActorMusicLabelOn->setVisible(false);
-    }
 
     if(M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker))
     {
@@ -343,112 +333,51 @@ void MainWindow::UpdateActorValues (void)
     }
     else
     {
-        ui->ActorCookerLabelOff->setVisible(true);
-        ui->ActorCookerLabelOn->setVisible(false);
+        if (ui->ActorCookerLabelOn->isVisible())
+        {
+            ui->ActorBoilerButton->setDisabled(false);
+            ui->ActorFridgeButton->setDisabled(false);
+            ui->ActorCookerLabelOff->setVisible(true);
+            ui->ActorCookerLabelOn->setVisible(false);
+        }
+
         if (    (0 != M_lastStateBoiler)
             &!  (this->M_cookerSwitchOn))
         {
             M_rtCom->SetData(RTCom::E_RTCom_Actor_230_Boiler, M_lastStateBoiler);
-            ui->ActorBoilerButton->setDisabled(false);
             M_lastStateBoiler = 0;
         }
         if (    (0 != M_lastStateFridge)
             &!  (this->M_cookerSwitchOn))
         {
             M_rtCom->SetData(RTCom::E_RTCom_Actor_230_Fridge, M_lastStateFridge);
-            ui->ActorFridgeButton->setDisabled(false);
             M_lastStateFridge = 0;
         }
     }
 
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Boiler))
+    this->UpdateUI(RTCom::E_RTCom_Actor_Music, ui->ActorMusicLabelOn, ui->ActorMusicLabelOff);
+    this->UpdateUI(RTCom::E_RTCom_Actor_230_Boiler, ui->ActorBoilerLabelOn, ui->ActorBoilerLabelOff);
+    this->UpdateUI(RTCom::E_RTCom_Actor_230_Fridge, ui->ActorFridgeLabelOn, ui->ActorFridgeLabelOff);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_bad, ui->switchOnBad, ui->switchOffBad);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_boden, ui->switchOnBoden, ui->switchOffBoden);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_essen, ui->switchOnEssen, ui->switchOffEssen);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_kueche, ui->switchOnKueche, ui->switchOffKueche);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_schlafen, ui->switchOnSchlafen, ui->switchOffSchlafen);
+    this->UpdateUI(RTCom::E_RTCom_Actor_light_vorzelt, ui->switchOnVorzelt, ui->switchOffVorzelt);
+}
+
+void MainWindow::UpdateUI (RTCom::RTCom_actor_sensor_e actor, QLabel* on, QLabel* off)
+{
+    if(M_rtCom->GetData(actor))
     {
-        ui->ActorBoilerLabelOff->setVisible(false);
-        ui->ActorBoilerLabelOn->setVisible(true);
+        off->setVisible(false);
+        on->setVisible(true);
     }
     else
     {
-        ui->ActorBoilerLabelOff->setVisible(true);
-        ui->ActorBoilerLabelOn->setVisible(false);
+        on->setVisible(false);
+        off->setVisible(true);
     }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Fridge))
-    {
-        ui->ActorFridgeLabelOff->setVisible(false);
-        ui->ActorFridgeLabelOn->setVisible(true);
-    }
-    else
-    {
-        ui->ActorFridgeLabelOff->setVisible(true);
-        ui->ActorFridgeLabelOn->setVisible(false);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_bad))
-    {
-        ui->switchOffBad->setVisible(false);
-        ui->switchOnBad->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnBad->setVisible(false);
-        ui->switchOffBad->setVisible(true);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_boden))
-    {
-        ui->switchOffBoden->setVisible(false);
-        ui->switchOnBoden->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnBoden->setVisible(false);
-        ui->switchOffBoden->setVisible(true);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_essen))
-    {
-        ui->switchOffEssen->setVisible(false);
-        ui->switchOnEssen->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnEssen->setVisible(false);
-        ui->switchOffEssen->setVisible(true);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_kueche))
-    {
-        ui->switchOffKueche->setVisible(false);
-        ui->switchOnKueche->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnKueche->setVisible(false);
-        ui->switchOffKueche->setVisible(true);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_schlafen))
-    {
-        ui->switchOffSchlafen->setVisible(false);
-        ui->switchOnSchlafen->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnSchlafen->setVisible(false);
-        ui->switchOffSchlafen->setVisible(true);
-    }
-
-    if(M_rtCom->GetData(RTCom::E_RTCom_Actor_light_vorzelt))
-    {
-        ui->switchOffVorzelt->setVisible(false);
-        ui->switchOnVorzelt->setVisible(true);
-    }
-    else
-    {
-        ui->switchOnVorzelt->setVisible(false);
-        ui->switchOffVorzelt->setVisible(true);
-    }
-
 }
 
 int MainWindow::CalculateLevel (void)
@@ -658,7 +587,7 @@ void MainWindow::on_ActorFanButton_clicked()
 void MainWindow::SetKlima(bool on)
 {
     /* switch off if necessary  */
-    if (    (!on)
+    if (    ((!on) || (M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker)))
         &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Klima)))
     {
         M_rtCom->SetData(RTCom::E_RTCom_Actor_Klima, 0);
@@ -666,9 +595,10 @@ void MainWindow::SetKlima(bool on)
     }
 
     /* switch on if necessary and allowed   */
-    if (    (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker))
-        &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Klima))
-        &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung)))
+    if (    (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker))
+        &&  (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_Klima))
+        &&  (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung))
+        &&  (on))
     {
         M_rtCom->SetData(RTCom::E_RTCom_Actor_Klima, 1);
     }
@@ -677,7 +607,7 @@ void MainWindow::SetKlima(bool on)
 void MainWindow::SetHeizung(bool on)
 {
     /* switch off if necessary  */
-    if (    (!on)
+    if (    ((!on) || (M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker)))
         &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung)))
     {
         M_rtCom->SetData(RTCom::E_RTCom_Actor_Heizung, 0);
@@ -685,9 +615,10 @@ void MainWindow::SetHeizung(bool on)
     }
 
     /* switch on if necessary and allowed   */
-    if (    (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker))
-        &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Klima))
-        &&  (0 != M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung)))
+    if (    (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_230_Cooker))
+        &&  (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_Klima))
+        &&  (0 == M_rtCom->GetData(RTCom::E_RTCom_Actor_Heizung))
+        &&  (on))
     {
         M_rtCom->SetData(RTCom::E_RTCom_Actor_Heizung, 1);
     }

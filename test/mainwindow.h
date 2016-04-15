@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "../../raspberry_example/rtcom.h"
+#include "../sw/rtcom.h"
 
 namespace Ui {
 class MainWindow;

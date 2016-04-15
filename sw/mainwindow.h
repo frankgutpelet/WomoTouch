@@ -112,6 +112,7 @@ private:
     int CalculateLevel (void);
     void SetKlima(bool on);
     void SetHeizung(bool on);
+    void UpdateUI (RTCom::RTCom_actor_sensor_e actor, QLabel* on, QLabel* off);
 
 };
 
